@@ -1,51 +1,45 @@
-# 🎤 Bas-Konuş Yapay Zeka Dikte Asistanı (Windows)
+# PushToWhisper
 
-Bu proje, klavyenizdeki F9 tuşunu bir telsiz (bas-konuş) mandalı gibi kullanarak arka planda OpenAI'ın devasa hızlı ve zeki `large-v3-turbo` Whisper yapay zeka modelini çalıştıran sesli bir asistan projesidir. Siz tuşa basıp konuşursunuz, tuşu bıraktığınız an algıladığı metni kusursuz bir Türkçe (ve tam imla kuralları) ile anında aktif olan klasöre/pencereye yansıtıp yapıştırır.
+PushToWhisper is a high-performance, background voice dictation assistant that transforms your keyboard's F9 key into a push-to-talk mechanism. Powered by OpenAI's `large-v3-turbo` Whisper AI model locally on your GPU, it detects your speech, processes the audio with zero-delay, and pastes the flawlessly transcribed text directly into any active window or application you are currently focused on.
 
-## 🚀 Özellikler
+## Features
 
-- **0 ms Kayıt Ertelemesi:** Mikrofon kayıt motoru uyutulmadığı için F9 tuşuna bastığınız an "İlk harf yutulması" yaşatmadan kayda geçer.
-- **Tail Padding (Kuyruk Koruması):** Cümle bittikten sonra tuşu bıraksanız bile program sesin mikrofon yolundaki yankısını kaçırmamak için siz fark etmeden 0.4 sn arka planda kaydetmeye devam eder, son harfleri es geçmez.
-- **Kişisel Sözlük İle Tam Doğruluk (`kelimeler.txt`):** Yabancı terimleri, sektörel argoları (RAG, LoRA, n8n, Python) koda girmeden dışarıdan müdahaleyle kusursuz bir şekilde yazdırabilirsiniz. 
-- **Derin VAD (Ses Duyarlılık) Filtresi:** Aralardaki nefes seslerini, dudak şapırdatmalarını veya uzun es boşluklarını tıraşlayarak yapay zekanın cümlenizi "yarıda kesilmiş" zannedip unutmasını engeller.
-- **Ghost Paste (Oto-Yapıştır):** Elde ettiği mükemmel metni klavye-clipboard arayüzü ile doğrudan tarayıcınıza veya herhangi bir yazılımdaki input (metin) kutusuna sihir gibi yapıştırır.
+- Zero-Latency Recording: The microphone is initialized continuously in a background thread, meaning there is zero delay when you press F9. It captures your speech from the very first syllable.
+- Tail Padding: Continues recording for a seamless 0.4 seconds after releasing the hotkey to prevent cutting off the final syllables or trailing speech echoes.
+- Ghost Paste Integration: Built-in clipboard management and keyboard simulation instantly pastes your dictated text into web browsers, documents, IDEs, or configuration nodes (e.g., n8n).
+- Intelligent Custom Dictionary (`kelimeler.txt`): Out-of-the-box support for domain-specific jargon. Adding terms to the auto-generated external text file strictly enforces the model to output your desired acronyms and edge-case words (e.g., "RAG", "LLM", "n8n") without any code modification.
+- Advanced VAD Filtering: Voice Activity Detection filters out throat-clearing, deep breaths, and room static to maintain pristine AI context mapping.
 
----
+## Requirements
 
-## 🛠 Kurulum ve Sistem Gereksinimleri
+The project is built for Windows environments running Python 3.8 or higher.
+We strongly recommend running this within an isolated virtual environment (venv).
 
-Program `Python 3.8` veya üzeri bir sürüm ve **Windows işletim sistemi** üzerinde test edilerek yayınlanmıştır. Diğer projelerle çakışmaması adına Sanal Ortam (venv) kullanılarak indirilmesi tavsiye edilir.
+To install the dependencies, navigate to the directory and run:
 
-### 1. Kütüphaneleri Yükleyin
-Proje klasörünüze terminal ile girerek gereksinim kütüphanelerini kurun:
 ```powershell
 pip install -r requirements.txt
 ```
 
-*(Not: Proje performansı zirvede tutmak ve sesinizi saniyeler içinde anlayabilmek için ekran kartınızın Tensor çekirdeklerini (GPU/CUDA) kullanır. `ctranslate2` motorunun Windows'ta DLL dosyalarını bulabilmesi için projeye 1.5GB ağırlığındaki `nvidia-cublas-cu12` dosyaları paket ile entegre indirilmektedir. Siz bu gereksinimleri kurduğunuzda 3GB'lık NVIDIA CUDA Toolkit programını kurmanıza gerek kalmadan ekran kartınızla tam uyumlu çalışır).*
+Note: To guarantee lightning-fast transcription using GPU tensor cores, `PushToWhisper` utilizes the `ctranslate2` engine. Essential DLL structures (`nvidia-cublas-cu12` and `nvidia-cudnn-cu12`) are inherently managed inside the requirements, bypassing the need to natively install a dense full-system NVIDIA CUDA Toolkit.
 
----
+## Usage
 
-## 📖 Kullanım Kılavuzu
-
-1. Projeyi bir komut satırında veya IDE üzerinde çalıştırın:
+1. Execute the main program or run the provided batch script:
 ```powershell
-python bas_konus.py
+python pushtowhisper.py
 ```
-2. Terminal üstünde "Sistem Tamamen Hazır!" mesajını gördüğünüz an işlem tamamlanmıştır. (Not: Programı yürüttüğünüzde `large-v3-turbo` modelini henüz yüklemediyseniz ilk çalıştırmaya mahsus **3.1 GB** ebatında dosyaları internetten indirecek, sonraki kullanımlarda direkt çalışacaktır).
-3. Parmağınızla **F9 tuşuna basılı tutun** ve konuşmaya başlayın (Bas-Çek yapmayın, mandal mantığı).
-4. Cümleniz bittiğinde konuşmayı bırakın ve ardından son heceniz çıktıktan sonra **F9 tuşunu bırakın**.
-5. Bir saniyeden kısa bir süre içinde terminalde "⏳ Çevriliyor..." ibaresini göreceksiniz. Elleriniz klavyeden uzaktayken arka plandaki o metin Chrome aramasına, not defterinize veya farenin aktif bıraktığı yer neresiyse anında kendiliğinden yapışacaktır.
+2. Wait for the model to be allocated into your VRAM. If this is the primary run, it will download the ~3 GB `large-v3-turbo` model files securely into your local cache. Afterwards, loading will be nearly instantaneous.
+3. Once the "Sistem Tamamen Hazır!" (System Fully Ready) signal appears, click inside your desired text area (e.g., a Word document or Chrome search bar).
+4. Press and hold down the `F9` key on your keyboard and dictate your message.
+5. Release the key when finished. Within mere seconds, the accurately refined text will automatically map to your active cursor.
 
----
+## Training the Vocabulary Engine
 
-### 🧠 Kelime Dağarcığını Eğitmek (Önemli!)
-Uygulamayı çalıştırdığınız an klasörün kök dizinine otomatik olarak `kelimeler.txt` dosyası fırlatılır. İçine iş ve meslek alanınızda çok kullandığınız ancak sistemin yanlış anladığı terimleri (örneğin "LLM", "RAG", "Machine Learning", "Eksel" yerine Excel) virgülle ayırarak yazıp Not Defteri'ne **Kaydet(Ctrl+S)** deyin. 
-Yapay zeka bunu bir kopya kağıdı belleği olarak beyninde tutacak, siz konuştuğunuz o saniyede kelime listesinde arayıp eşleştirecek ve o anki metni harika çıkartacaktır. (Bunun için programı kapatıp açmanıza gerek yoktur).
+Upon execution, the script will map a `kelimeler.txt` file inside its root directory.
+You may dynamically edit this text file to include specific abbreviations or technical jargon relevant to your workflow. The AI dynamically refers to this list upon every transcription cycle as its "initial prompt", guaranteeing words like "RAG" or "Excel" are never mistakenly transcribed phonetically.
 
----
+## Warnings and Considerations
 
-## ⚠️ Uyarılar ve Olası Hatalar
-
-- Programın donanım tuşu `F9` hamlelerini işletim sistemi seviyesinde rahat yakalayabilmesi için kullandığınız IDE'nin ya da CMD/PowerShell pencerelerinin **Yönetici Olarak Çalıştırılması (Run As Administrator)** gerekebilir. 
-- Yüksek boyutlu ses kartı hafızasına (VRAM) sahip bir donanımınız olmaması durumunda cihaz "Out-Of-Memory (OOM)" yani yetersiz bellek çökmesine maruz kalabilir. Bu problemi kod içerisindeki 27. Satırda yer alan `MODEL_SIZE` değerini `"large-v3-turbo"` yerine `"medium"` veya çok güçlü bir işlemciniz varsa `"small"` seçeneğiyle değiştirerek çözebilirsiniz.
+- Administrator Privileges: In strict IT environments or specific code editors, the `keyboard` module may fail to capture the `F9` keydown event passively. Ensure you grant "Run as Administrator" access to your executing terminal if this occurs.
+- VRAM Constraints: If your system encounters an Out-Of-Memory (OOM) error resulting in unexpected crashes, you lack the dedicated VRAM for the `large-v3-turbo` dataset. Inside the Python configuration code, redefine the `MODEL_SIZE` variable from `"large-v3-turbo"` to either `"medium"` or `"small"` to drastically reduce memory usage.
