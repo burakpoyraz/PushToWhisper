@@ -10,9 +10,17 @@ PushToWhisper is a high-performance, background voice dictation assistant that t
 - Intelligent Custom Dictionary (`kelimeler.txt`): Out-of-the-box support for domain-specific jargon. Adding terms to the auto-generated external text file strictly enforces the model to output your desired acronyms and edge-case words (e.g., "RAG", "LLM", "n8n") without any code modification.
 - Advanced VAD Filtering: Voice Activity Detection filters out throat-clearing, deep breaths, and room static to maintain pristine AI context mapping.
 
-## Requirements
+## System Requirements
 
-The project is built for Windows environments running Python 3.8 or higher.
+Due to the use of the `large-v3-turbo` model, your system should meet the following minimum specifications for optimal performance:
+- **GPU:** NVIDIA GPU with at least 4-6 GB of VRAM (CUDA support is required for fast processing).
+- **RAM:** Minimum 8 GB of system memory.
+- **Storage:** ~3 GB of free disk space for downloading and caching the model weights.
+- **OS:** Windows 10/11
+- **Python:** Python 3.8 or higher
+
+## Installation
+
 We strongly recommend running this within an isolated virtual environment (venv).
 
 To install the dependencies, navigate to the directory and run:
